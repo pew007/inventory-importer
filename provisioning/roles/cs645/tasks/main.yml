@@ -1,0 +1,14 @@
+---
+
+- name: Update libraries
+  apt: update_cache=yes
+
+- name: Install libraries
+  apt: pkg={{ item }} state=installed update_cache=yes
+  with_items:
+    - git
+    - apache2
+    - mysql-server
+
+# - name: Configure cpan
+#   shell: yes '' | cpan
