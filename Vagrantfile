@@ -8,7 +8,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
   config.vm.box = "ubuntu-64-perl"
   config.vm.network "forwarded_port", guest: 80, host: 8080
-  config.vm.synced_folder "~/CS645/proj1", "/httpd/apps/proj1"
+  config.vm.synced_folder "./", "/var/www/proj1"
 
   config.ssh.forward_agent = true
 
