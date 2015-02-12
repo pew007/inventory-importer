@@ -27,3 +27,8 @@
     - perl-debug
     - libapache2-request-perl
     - libdatetime-perl
+
+- name: Install perl modules
+  shell: yes '' | cpan install {{ item }}
+  with_items:
+    - CGI
