@@ -6,9 +6,9 @@ VAGRANTFILE_API_VERSION = "2"
 
 Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
-  config.vm.box = "ubuntu-64-perl"
-  config.vm.network "forwarded_port", guest: 80, host: 8080
-  config.vm.synced_folder "./", "/var/www/proj1"
+  config.vm.box = "cs645"
+  # config.vm.network "forwarded_port", guest: 80, host: 8080
+  # config.vm.synced_folder "./", "/var/www/proj1"
 
   config.ssh.forward_agent = true
 
@@ -27,11 +27,11 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     vb.customize ["modifyvm", :id, "--cpus", cpus]
   end
 
-  config.vm.provision "ansible" do |ansible|
-    ansible.playbook = "provisioning/site.yml"
-    ansible.limit = 'all'
-    ansible.raw_ssh_args = ['-o UserKnownHostsFile=/dev/null']
-    # ansible.verbose = 'vvvv'
-  end
+  # config.vm.provision "ansible" do |ansible|
+  #   ansible.playbook = "provisioning/site.yml"
+  #   ansible.limit = 'all'
+  #   ansible.raw_ssh_args = ['-o UserKnownHostsFile=/dev/null']
+  #   ansible.verbose = 'vvvv'
+  # end
 
 end

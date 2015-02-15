@@ -1,34 +1,8 @@
 ---
 
-- name: Update libraries
-  apt: update_cache=yes
-
-- name: Install debconf-utils
-  apt: pkg={{ item }} state=installed update_cache=yes
-  with_items:
-    - debconf-utils
-
-- name: Set mysql-server root password
-  sudo: yes
-  shell: echo mysql-server mysql-server/root_password select root | debconf-set-selections
-
-- name: Confirm mysql-server root password
-  sudo: yes
-  shell: echo mysql-server mysql-server/root_password_again select root | debconf-set-selections
-
-- name: Install libraries
-  apt: pkg={{ item }} state=installed update_cache=yes
-  with_items:
-    - git
-    - apache2
-    - mysql-server
-    - libapache2-mod-perl2
-    - libapache2-mod-perl2-dev
-    - perl-debug
-    - libapache2-request-perl
-    - libdatetime-perl
-
-- name: Install perl modules
-  shell: yes '' | cpan install {{ item }}
-  with_items:
-    - CGI
+- name: Copy site-enabled
+  copy: src=cs645.conf
+        dest=/etc/apache2/sites-enabled/cs645.conf
+        force=yes
+  notify:
+    - restart apache2
