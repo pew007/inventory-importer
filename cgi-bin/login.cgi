@@ -57,30 +57,27 @@ END
 }
 
 sub send_to_main {
-    my $token   = $cgi->param("token");
-    my $sid     = $cgi->cookie("jadrn048SID") || undef;
-    my $session = new CGI::Session(undef, $sid, {Directory=>'/tmp'});
-    my $cookie  = $cgi->cookie(jadrn048SID => $session->id);
-    my $previous_token = $session->param('token');
 
-    $session->param('token', $token);
+    my $token = $cgi->param('token');
+
+    my $session = new CGI::Session(undef, undef, {Directory=>'/tmp'});
+    my $sid     = $session->id();
+    my $cookie  = $cgi->cookie(jadrn048SID => $sid);
+
     $session->expires('+1d');
 
     print $cgi->header(
-        '-cookie' => $cookie
+        '-cookie' => $cookie,
+        '-Cache-Control' => 'no-cache, no-store, must-revalidate, max-age=0',
         );
-
-    print "session id is " . $session->id() . "<br>";
-    print "session id from cookie is $sid<br>";
-    print "previous_token is $previous_token<br>";
-    print "token from POST is $token<br>";
-    print "token from session is " . $session->param('token') . "<br>";
 
     print <<END
 
 <html>
 <head></head>
 <body>
+Session id: $sid<br><br>
+Token: $token<br><br>
 Private page <br><br>
 <a href="/cgi-bin/logout.cgi">Logout Now</a>
 </body>

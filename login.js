@@ -7,6 +7,7 @@ $(document).ready(function() {
 
     $('#login').submit(function(){
         $('[name=token]').val(token);
+        console.log('re submit');
     })
 
     $('.reset').click(function(){
