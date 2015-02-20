@@ -1,0 +1,173 @@
+2/17
+
+perl -cwT file
+
+js, css
+src="/~jadrn000/proj1/myfile.js"
+
+images
+img src="/~jadrn000/proj1/_upload_dir/afad.jpg" 777 proj1 711
+
+save to:
+/home/jadrn000/public_html/proj1/_upload_dir/
+
+\ address (&)
+$ dereference
+$num = 2;
+$num_ref = \$num;
+print "$num";
+print "$$num_ref";
+
+@colors = (red, green, blue);
+$color_ref = \@colors; <- ref to array
+$ref_to_color_ref = \color_ref
+
+to reconstitute array:
+@new_color_array = @($color_ref);
+
+foo(\$count, \@arr);
+
+sub foo {
+    my ($a, $b) = @_;
+    print "count is $$a"
+
+    foreach @item (@{$b}){
+        print "$item";
+    }
+}
+
+$cart{'jones'} = \@shopping_cart;
+
+2/19
+
+@color_array = ('red', 'green', 'blue');
+@num_array = ('one', 'two', 'three');
+
+$my_hash{'color'} = \@color_array;
+$my_hash{'numbers'} = \@num_array;
+
+color => ref to color array
+numbers => ref to num array
+
+$my_hash{'color'}->[0]; 'red'
+$my_hash{'numbers'}->[1]; 'two'
+
+@col_num = (\@color_array, \@num_array);
+$col_num_ref = \@col_num;
+$col_num_ref->[0][0]; 'red'
+$col_num_ref[0][0]; 'red' shortcut in perl
+$col_num_ref = \@color_array;
+$$col_array_ref[0]; 'red'
+$col_array_ref->[0];
+
+my %orders;
+$orders{'ABC-123'} = 2;
+$orders{'xyz-345'} = 3;
+$order_ref = \%orders;
+
+my %cart;
+$cart{'orders'} = $order_ref;
+$cart{'orders'}->{'ABC-123'};  2;
+
+my $cart_ref = \%cart;
+$cart_ref->{'orders'}->{'ABC-123'}; 2
+
+@new_color_array = @{$color_array_ref};
+
+Regular expression:
+
+3 common patterns:
+$x =~ s/// -> sub/replace text g: global i: case insensitive
+$x =~ m// -> match
+$x =~ tr/// -> translate
+
+$x =~ s/ //g; removes all spaces
+$x =~ /\t/ /g; replace tabs with spaces
+
+if ($line =~ /php/) {
+    die "go away";
+}
+
+$x =~ tr/a-z/A-Z/;
+
+$name = 'John';
+$name =~ /Johnny/  # False: there's no Johnny in John, not the other way around.
+
+if ($a =~ /b/) # Does the pattern b exist anywhere in $a?
+
+\|()[]{}^$*+?. needs escape
+$x =~ /\{/ # look for {
+$x =~ /\\/ # look for \
+
+(1 + 1) * 3 = 6
+\(1\+1\)\*3=6
+
+$x =~ /John|Jon|Goan|Xhon|Ioan/
+$x =~ /color|colour/
+
+. any one character
+* 0 or more
++ 1 or more
+? 0 or 1
+{n,m} at least n, no more than m
+{n} exactly n
+
+$x = "John";
+if ($x =~ /(xyz)*/) # True. * is 0 or more. Damn.
+
+/colou?r/ ? binds to the last item. use () for more than 1 char
+
+^ starts with
+$ ends with
+\b word boundary
+\B except word boundary      /\Bhe\B/ matches he in a word but not a boundary. doesn't match the or her but matches their
+\w word char
+\W not a word char
+\s whitespace
+\S not a whitespace
+
+/ABC-123/ /^ABC-123$/ matches exactly
+
+[] character class
+/gr[ae]y/ matches gray and grey
+/[0-9]/
+/Ssmith/
+/[Ss]mith/
+/h[123456]/ matches all header tags. /h[1-6]/
+
+/[A-Z]{3}-[0-9]{3}/
+
+/q[^u]/ a q not followed by a u. Iraqi, miqra, qasida
+
+[-./]
+
+only numbers
+/^[0-9]+$/ 12a23 doesn't match
+
+only chars
+/^[a-z][A-Z]+$/
+
+$str = "Good food";
+$str =~ s/o*/e/; -> eGood food
+
+matching english word
+/\b[A-Za-z]+\b/
+vis-a-vis doesn't match. /\b[A-Za-z-]+\b/ is good.
+
+currency:
+/^[0-9]{0,}(\.[0-9]{2})?$/
+25, 25.99
+doesn't match 2.1 or 25.999
+
+phone #
+/^(\([0-9]{3}\))?-[0-9]{3}-[0-9]{4}$/
+
+
+
+
+
+
+
+
+
+

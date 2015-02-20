@@ -10,8 +10,9 @@
 <body>
     <h1>Login Example</h1>
     <div id="main">
-    <!-- <form method="POST" action="/perl/jadrn000/proj1/login.cgi"> -->
-    <form method="POST" action="/cgi-bin/login.cgi">
+    <!-- <form method="POST" action="/perl/jadrn048/proj1/login.cgi"> -->
+    <form id='login' method="POST" action="/cgi-bin/login.cgi">
+        <input type='hidden' name="token">
         <table>
         <tr>
             <td>Username:</td>
@@ -22,7 +23,7 @@
             <td><input type="password" name="password" size="15"></td>
         </tr>
         <tr>
-            <td><input type="reset" class="button"></td>
+            <td><input type="reset" class="button reset"></td>
             <td><input type="submit" value="Login" class="button"></td>
         </tr>
         </table>

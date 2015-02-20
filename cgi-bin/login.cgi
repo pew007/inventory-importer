@@ -7,7 +7,9 @@ use Crypt::SaltedHash;
 use strict;
 use warnings;
 
-my $q;
+my $cgi = new CGI;
+
+open (LOG, ">/vagrant/logs/log");
 
 if (authenticate_user()) {
     send_to_main();
@@ -16,10 +18,8 @@ if (authenticate_user()) {
 }
 
 sub authenticate_user {
-
-    $q = new CGI;
-    my $username = $q->param("username");
-    my $password = $q->param("password");
+    my $username = $cgi->param("username");
+    my $password = $cgi->param("password");
 
     open DATA, "</vagrant/cgi-bin/passwords.dat" or die "Cannot open file";
     my @file_lines = <DATA>;
@@ -44,7 +44,7 @@ sub authenticate_user {
 
 sub send_to_login_error {
     print "Content-type: text/html\n\n";
-    print <<"END";
+    print <<END;
 
 <html>
 <head>
@@ -57,17 +57,31 @@ END
 }
 
 sub send_to_main {
-    my $session = new CGI::Session(undef, undef, {Directory=>'/tmp'});
+    my $token   = $cgi->param("token");
+    my $sid     = $cgi->cookie("jadrn048SID") || undef;
+    my $session = new CGI::Session(undef, $sid, {Directory=>'/tmp'});
+    my $cookie  = $cgi->cookie(jadrn048SID => $session->id);
+    my $previous_token = $session->param('token');
+
+    $session->param('token', $token);
     $session->expires('+1d');
-    my $cookie = $q->cookie(jadrn000SID => $session->id);
-    print $q->header( -cookie=>$cookie );
+
+    print $cgi->header(
+        '-cookie' => $cookie
+        );
+
+    print "session id is " . $session->id() . "<br>";
+    print "session id from cookie is $sid<br>";
+    print "previous_token is $previous_token<br>";
+    print "token from POST is $token<br>";
+    print "token from session is " . $session->param('token') . "<br>";
 
     print <<END
 
 <html>
 <head></head>
 <body>
-Private page
+Private page <br><br>
 <a href="/cgi-bin/logout.cgi">Logout Now</a>
 </body>
 

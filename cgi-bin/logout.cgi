@@ -4,17 +4,19 @@ use CGI;
 use CGI::Session;
 use CGI::Carp qw (fatalsToBrowser);
 
-my $q = new CGI;
-my $sid = $q->cookie("jadrn000SID") || undef;
+my $cgi = new CGI;
+my $sid = $cgi->cookie("jadrn048SID") || undef;
 
 $session = new CGI::Session(undef, $sid, {Directory => '/tmp'});
-$session->delete();
+$session->clear(['token']);
+# $session->delete();
 
-my $cookie = $q->cookie(jadrn000SID => '');
+my $cookie = $cgi->cookie(jadrn048SID => '');
 
-print $q->header( -cookie=>$cookie );
+print $cgi->header( -cookie => $cookie );
 
 
+print "Token is " . $session->param('token') . "<br>";
 print <<END
 
 <html>
