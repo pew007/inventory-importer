@@ -4,6 +4,7 @@ use CGI;
 use CGI::Session;
 use CGI::Carp qw (fatalsToBrowser);
 use Crypt::SaltedHash;
+use Session::Token;
 use strict;
 use warnings;
 
@@ -58,29 +59,51 @@ END
 
 sub send_to_main {
 
-    my $token = $cgi->param('token');
+    # Retrive session from cookie or create a new one
+    my $cookie_sid = $cgi->cookie('jadrn048SID') || undef;
+    my $session = new CGI::Session(undef, $cookie_sid, {Directory=>'/tmp'});
 
-    my $session = new CGI::Session(undef, undef, {Directory=>'/tmp'});
-    my $sid     = $session->id();
-    my $cookie  = $cgi->cookie(jadrn048SID => $sid);
+    my $token = Session::Token->new->get;
 
-    $session->expires('+1d');
-
+    # Set cookie
     print $cgi->header(
-        '-cookie' => $cookie,
-        '-Cache-Control' => 'no-cache, no-store, must-revalidate, max-age=0',
+        '-cookie'        => $cgi->cookie(jadrn048SID => $session->id),
+        '-Cache-Control' => 'no-cache, no-store, must-revalidate, max-age=0'
         );
 
-    print <<END
+    # Initial login
+    if ($cookie_sid == undef) {
+        # Create security token and store in session
+        $session->param('token', $token);
+        $session->expires('+1d');
+
+        print "new log in<br><br>";
+        print "token from session is " . $session->param('token') . "<br>";
+        print "<a href='/cgi-bin/logout.cgi'>Logout Now</a>";
+        return;
+    }
+
+    # Validate existing session
+    if ($cookie_sid eq $session->id && $token eq $session->param('token')) {
+        print "sid from cookie is $cookie_sid<br><br>";
+        print "token from session is " . $session->param('token') . "<br>";
+        print "new token is $token<br><br>";
+        print <<END
 
 <html>
 <head></head>
 <body>
-Session id: $sid<br><br>
-Token: $token<br><br>
+
 Private page <br><br>
 <a href="/cgi-bin/logout.cgi">Logout Now</a>
 </body>
 
 END
+    } else {
+        print "sid from cookie is $cookie_sid<br><br>";
+        print "session id is " . $session->id . "<br><br>";
+        print "token from session is " . $session->param('token') . "<br>";
+        print "new token is $token<br><br>";
+        print "invalid session. please log in again";
+    }
 }

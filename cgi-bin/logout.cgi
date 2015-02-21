@@ -5,15 +5,14 @@ use CGI::Session;
 use CGI::Carp qw (fatalsToBrowser);
 
 my $cgi = new CGI;
-my $sid = $cgi->cookie("jadrn048SID") || undef;
+my $cookie_sid = $cgi->cookie("jadrn048SID") || undef;
 
-$session = new CGI::Session(undef, $sid, {Directory => '/tmp'});
-$session->delete();
-
-my $cookie = $cgi->cookie(jadrn048SID => '');
+$session = new CGI::Session(undef, $cookie_sid, {Directory => '/tmp'});
+# $session->delete();
+$session->clear(['token']);
 
 print $cgi->header(
-    -cookie => $cookie,
+    '-cookie'        => $cgi->cookie(jadrn048SID => $session->id),
     '-Cache-Control' => 'must-revalidate, max-age=0, no-store, no-cache'
     );
 
