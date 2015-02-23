@@ -1,0 +1,76 @@
+use jadrn048;
+
+DROP TABLE IF EXISTS product;
+DROP TABLE IF EXISTS category;
+DROP TABLE IF EXISTS vendor;
+DROP TABLE IF EXISTS platform;
+
+CREATE TABLE vendor(
+    vendorID    INT     NOT NULL    auto_increment,
+    name        varchar(20) NOT NULL,
+    PRIMARY KEY (vendorID)
+    );
+
+CREATE TABLE category(
+    categoryID  INT     NOT NULL    auto_increment,
+    name        varchar(20) NOT NULL,
+    PRIMARY KEY (categoryID)
+    );
+
+CREATE TABLE platform(
+    platformID  INT  NOT NULL auto_increment,
+    name        varchar(20) NOT NULL,
+    PRIMARY KEY (platformID)
+    );
+
+CREATE TABLE product (
+    sku         CHAR(7)     NOT NULL,
+    categoryID  INT,
+    vendorID    INT,
+    platformID  INT,
+    vendorModel varchar(50),
+    description varchar(1024),
+    features    varchar(512),
+    cost        DECIMAL(10,2),
+    retail      DECIMAL(10,2),
+    image       CHAR(11),
+    PRIMARY KEY(sku),
+    FOREIGN KEY(categoryID) REFERENCES category(categoryID),
+    FOREIGN KEY(vendorID) REFERENCES vendor(vendorID),
+    FOREIGN KEY(platformID) REFERENCES platform(platformID)
+    );
+
+INSERT INTO vendor VALUES('','Activision');
+INSERT INTO vendor VALUES('','Capcorn');
+INSERT INTO vendor VALUES('','Electronic Arts');
+INSERT INTO vendor VALUES('','Generic');
+INSERT INTO vendor VALUES('','Logitech');
+INSERT INTO vendor VALUES('','Microsoft');
+INSERT INTO vendor VALUES('','Nintendo');
+INSERT INTO vendor VALUES('','Nyko');
+INSERT INTO vendor VALUES('','Razer');
+INSERT INTO vendor VALUES('','Rockstar');
+INSERT INTO vendor VALUES('','Sega');
+INSERT INTO vendor VALUES('','Sony');
+INSERT INTO vendor VALUES('','Square Enix');
+INSERT INTO vendor VALUES('','Ubisoft');
+
+INSERT INTO category VALUES('','Action');
+INSERT INTO category VALUES('','Casual');
+INSERT INTO category VALUES('','Fighting');
+INSERT INTO category VALUES('','Kinect');
+INSERT INTO category VALUES('','Movies & TV');
+INSERT INTO category VALUES('','Music & Party');
+INSERT INTO category VALUES('','Puzzle & Cards');
+INSERT INTO category VALUES('','Role-Playing');
+INSERT INTO category VALUES('','Shooter');
+INSERT INTO category VALUES('','Simulation');
+INSERT INTO category VALUES('','Sports');
+INSERT INTO category VALUES('','Strategy');
+
+INSERT INTO platform VALUES('', 'Xbox 360');
+INSERT INTO platform VALUES('', 'Xbox One');
+INSERT INTO platform VALUES('', 'PS3');
+INSERT INTO platform VALUES('', 'PS4');
+INSERT INTO platform VALUES('', 'Wii');
+INSERT INTO platform VALUES('', 'Will U');

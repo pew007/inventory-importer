@@ -17,12 +17,14 @@ print $cgi->header(
     );
 
 
-print <<END
+print "session id is " . $session->id . "<br><br>";
+print "token in session is " . $session->param('token');
+# print <<END
 
-<html>
-<head>
-    <meta http-equiv="refresh" content="0; url=http://localhost:8081/index.html">
-</head>
-</html>
+# <html>
+# <head>
+#     <meta http-equiv="refresh" content="0; url=http://localhost:8081/index.html">
+# </head>
+# </html>
 
-END
+# END

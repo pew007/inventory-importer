@@ -4,13 +4,13 @@ use CGI;
 use CGI::Session;
 use CGI::Carp qw (fatalsToBrowser);
 use Crypt::SaltedHash;
+use DBI;
 use Session::Token;
+use HTML::Template;
 use strict;
 use warnings;
 
 my $cgi = new CGI;
-
-open (LOG, ">/vagrant/logs/log");
 
 if (authenticate_user()) {
     send_to_main();
@@ -44,66 +44,19 @@ sub authenticate_user {
 }
 
 sub send_to_login_error {
-    print "Content-type: text/html\n\n";
-    print <<END;
-
-<html>
-<head>
-    <meta http-equiv="refresh" content="0; url=http://localhost:8081/error.html">
-</head>
-<body></body>
-</html>
-
-END
+    print $cgi->redirect('http://localhost:8081/error.html');
 }
 
 sub send_to_main {
-
     # Retrive session from cookie or create a new one
     my $cookie_sid = $cgi->cookie('jadrn048SID') || undef;
     my $session = new CGI::Session(undef, $cookie_sid, {Directory=>'/tmp'});
 
     my $token = Session::Token->new->get;
+    my $token_in_session = $session->param('token');
 
     # Set cookie
-    print $cgi->header(
-        '-cookie'        => $cgi->cookie(jadrn048SID => $session->id),
-        '-Cache-Control' => 'no-cache, no-store, must-revalidate, max-age=0'
-        );
+    # print $cgi->header('-cookie' => $cgi->cookie(jadrn048SID => $session->id));
 
-    # Initial login
-    if ($cookie_sid == undef) {
-        # Create security token and store in session
-        $session->param('token', $token);
-        $session->expires('+1d');
-
-        print "new log in<br><br>";
-        print "token from session is " . $session->param('token') . "<br>";
-        print "<a href='/cgi-bin/logout.cgi'>Logout Now</a>";
-        return;
-    }
-
-    # Validate existing session
-    if ($cookie_sid eq $session->id && $token eq $session->param('token')) {
-        print "sid from cookie is $cookie_sid<br><br>";
-        print "token from session is " . $session->param('token') . "<br>";
-        print "new token is $token<br><br>";
-        print <<END
-
-<html>
-<head></head>
-<body>
-
-Private page <br><br>
-<a href="/cgi-bin/logout.cgi">Logout Now</a>
-</body>
-
-END
-    } else {
-        print "sid from cookie is $cookie_sid<br><br>";
-        print "session id is " . $session->id . "<br><br>";
-        print "token from session is " . $session->param('token') . "<br>";
-        print "new token is $token<br><br>";
-        print "invalid session. please log in again";
-    }
+    print $cgi->redirect('http://localhost:8081/cgi-bin/main.cgi');
 }

@@ -1,0 +1,90 @@
+html,body { margin: 10px; }
+
+h2 { text-align: center; }
+
+div#tabs-1 {
+    height: 100%;
+    background: #DFD;
+    border: 1px solid #009;
+    padding: 5px;
+}
+div#tabs-2 {
+    height: 100%;
+    background: #FFD;
+    border: 1px solid #009;
+    padding: 5px;
+}
+div#tabs-3 {
+    height: 100%;
+    background: #FDD;
+    border: 1px solid #009;
+    padding: 5px;
+}
+
+.ui-tabs-hide {
+    display: none;
+}
+
+div#tabs {
+    margin: 0 40px 0 40px;
+    height: 500px;
+    min-width:500px;
+    }
+
+div#tabs ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    height: 22px;
+    border-bottom: 1px solid #000;
+}
+div#tabs ul li {
+    float: left;
+    height: 17px;
+    padding: 4px 10px 0 10px;
+    margin-right: 5px;
+    border: 1px solid #ABC;
+    border-bottom: none;
+    position: relative;
+    background: #000;
+}
+div#tabs ul li a {
+    text-decoration: none;
+    color: white;
+}
+div#tabs ul li.ui-tabs-selected {
+    background: #559;
+}
+div#tabs ul li.ui-tabs-selected a {
+    color: white;
+}
+
+######## Custom ########
+fieldset {
+    width: 500px;
+}
+
+legend {
+    font-size: 20px;
+}
+
+label.field {
+    text-align: left;
+    width: 200px;
+    float: left;
+    font-weight: bold;
+}
+
+fieldset div {
+    clear: both;
+    padding: 5px;
+}
+
+.form-error {
+    padding: 20px;
+    color: red;
+}
+
+.error-field {
+    border: 2px solid red;
+}
