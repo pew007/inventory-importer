@@ -35,7 +35,6 @@ $(document).ready(function() {
     function processUpload() {
         var url = "/cgi-bin/upload.cgi";
         var form_data = new FormData($('form[name=new_product]')[0]);
-        form_data.append("image", $('input[type=file]')[0].files[0]);
 
         $.ajax( {
             url: url,

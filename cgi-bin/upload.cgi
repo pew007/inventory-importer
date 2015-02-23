@@ -4,6 +4,7 @@ use CGI;
 use CGI::Carp qw (fatalsToBrowser);
 use File::Basename;
 use JSON;
+use DBI;
 
 ####################################################################
 ### constants
@@ -12,12 +13,27 @@ my $upload_dir = '/home/vagrant/public_html/proj1/_p_images';
 my $safe_filename_chars = "a-zA-Z0-9_.-";
 ####################################################################
 
-my $cgi = new CGI;
+my $cgi             = new CGI;
+my $sku             = $cgi->param('sku');
+my $category        = $cgi->param('category');
+my $vendor          = $cgi->param('vendor');
+my $platform        = $cgi->param('platform');
+my $vendor_model    = $cgi->param('vendorModel');
+my $description     = $cgi->param('description');
+my $features        = $cgi->param('features');
+my $cost            = $cgi->param('cost');
+my $retail          = $cgi->param('retail');
+my $filename        = $cgi->param("image");
+
+# Use SKU as new filename
+my $new_filename    = get_new_filename($filename);
+
 upload_image();
-get_json_response();
+check_for_dup_sku();
+insert_new_product();
 
 sub upload_image {
-    my $filename = $cgi->param("image");
+
     unless($filename) {
         die "There was a problem uploading the image; ".
             "it's probably too big.";
@@ -30,16 +46,13 @@ sub upload_image {
         die "Invalid mime type, $mimetype";
     }
 
-    # Use SKU as new filename
-    $filename = get_new_filename($filename);
-
     # get a handle on the uploaded image
     my $filehandle = $cgi->upload("image");
 
     unless($filehandle) { die "Invalid handle"; }
 
     # save the file
-    open UPLOADFILE, ">$upload_dir/$filename" or die
+    open UPLOADFILE, ">$upload_dir/$new_filename" or die
         "Error, cannot save the file.";
     binmode UPLOADFILE;
     while(<$filehandle>) {
@@ -54,7 +67,6 @@ sub upload_image {
 sub get_new_filename {
     my ($filename) = @_;
 
-    my $sku = $cgi->param('sku');
     my ($name, $path, $extension) = fileparse($filename, qr/\.[^.]*/);
     $filename = $sku.$extension;
     $filename =~ s/ //; #remove any spaces
@@ -73,18 +85,41 @@ sub untaint {
     return $1;
 }
 
-sub get_json_response {
-    my $sku             = $cgi->param('sku');
-    my $category        = $cgi->param('category');
-    my $vendor          = $cgi->param('vendor');
-    my $platform        = $cgi->param('platform');
-    my $vendor_model    = $cgi->param('vendorModel');
-    my $description     = $cgi->param('description');
-    my $features        = $cgi->param('features');
-    my $cost            = $cgi->param('cost');
-    my $retail          = $cgi->param('retail');
+sub check_for_dup_sku {
+    # body...
+}
 
-    my $json->{"status"} = $sku;
+sub insert_new_product {
+    # my $host = "opatija.sdsu.edu";
+    my $host = '127.0.0.1';
+    my $port = "3306";
+    my $database = "jadrn048";
+    # my $username = "jadrn048";
+    my $username = 'root';
+    my $password = "";
+    my $database_source = "dbi:mysql:$database:$host:$port";
+
+    my $dbh = DBI->connect($database_source, $username, $password)
+    or die 'Cannot connect to db';
+
+    my $statement = "INSERT INTO product values(" .
+        "'$sku', $category, $vendor, $platform, '$vendor_model', '$description', '$features', $cost, $retail, '$new_filename');";
+
+    my $rows = $dbh->do($statement);
+    $dbh->disconnect();
+
+    if ($rows > 0) {
+        get_json_response('OK');
+    } else {
+        get_json_response('Error');
+    }
+}
+
+sub get_json_response {
+
+    my ($status) = @_;
+
+    my $json->{"status"} = $status;
     my $json_text = to_json($json);
 
     print $cgi->header('application/json');

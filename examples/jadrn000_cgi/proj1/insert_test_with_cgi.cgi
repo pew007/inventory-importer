@@ -51,8 +51,8 @@ print "$how_many rows affected\n<br />";
 $statement = "SELECT sku, category.name, vendor.name, vendorModel, retail ".
 	" FROM vendor, category, product WHERE vendor.vendorID=product.venID and ".
 	" category.categoryID=product.catID;";
-	
-print "\nThe statement is\n$statement\n<br />";	
+
+print "\nThe statement is\n$statement\n<br />";
 my $sth = $dbh->prepare($statement);
 $sth->execute();
 
