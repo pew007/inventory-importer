@@ -38,13 +38,13 @@ sub get_all {
     my $dbh = get_db_connection();
     my $sth = $dbh->prepare("SELECT * FROM $table");
     $sth->execute();
-    my $vendors;
-    push @{$vendors}, $_ while $_ = $sth->fetchrow_hashref();
+    my $results;
+    push @{$results}, $_ while $_ = $sth->fetchrow_hashref();
 
     $sth->finish();
     $dbh->disconnect();
 
-    return $vendors;
+    return $results;
 }
 
 sub get_db_connection {
