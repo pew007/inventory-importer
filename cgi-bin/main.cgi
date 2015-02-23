@@ -16,25 +16,10 @@ print $cgi->header;
 render_main();
 
 sub render_main {
-    my $dbh = get_db_connection();
 
-    # Get vendor list
-    my $sth = $dbh->prepare("SELECT * FROM vendor");
-    $sth->execute();
-    my $vendors;
-    push @{$vendors}, $_ while $_ = $sth->fetchrow_hashref();
-
-    # Get category list
-    my $sth = $dbh->prepare("SELECT * FROM category");
-    $sth->execute();
-    my $categories;
-    push @{$categories}, $_ while $_ = $sth->fetchrow_hashref();
-
-    # Get platform list
-    my $sth = $dbh->prepare("SELECT * FROM platform");
-    $sth->execute();
-    my $platforms;
-    push @{$platforms}, $_ while $_ = $sth->fetchrow_hashref();
+    my $vendors     = get_all('vendor');
+    my $categories  = get_all('category');
+    my $platforms   = get_all('platform');
 
     # instantiate the template and substitute the values
     my $template = HTML::Template->new(filename => '/vagrant/templates/main.tmpl');
@@ -44,10 +29,22 @@ sub render_main {
         PLATFORMS   => $platforms
     );
 
+    print $template->output;
+}
+
+sub get_all {
+    my ($table) = @_;
+
+    my $dbh = get_db_connection();
+    my $sth = $dbh->prepare("SELECT * FROM $table");
+    $sth->execute();
+    my $vendors;
+    push @{$vendors}, $_ while $_ = $sth->fetchrow_hashref();
+
     $sth->finish();
     $dbh->disconnect();
 
-    print $template->output;
+    return $vendors;
 }
 
 sub get_db_connection {
@@ -55,7 +52,7 @@ sub get_db_connection {
     my $host = '127.0.0.1';
     my $port = "3306";
     my $database = "jadrn048";
-    # my $username = "jadrnxxx";
+    # my $username = "jadrn048";
     my $username = 'root';
     my $password = "";
     my $database_source = "dbi:mysql:$database:$host:$port";

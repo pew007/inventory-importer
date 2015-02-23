@@ -6,13 +6,11 @@ $(document).ready(function() {
 
     $("form[name='new_product'] #submit_button").click(function(){
         $('.form-error').remove();
-        validateForm();
+        processForm();
     });
 
-    function validateForm() {
+    function processForm() {
         var form = $("form[name='new_product']");
-        // var url = 'http://jadran.sdsu.edu/perl/jadrn048/proj1/validate.cgi';
-        var url = "/cgi-bin/validate.cgi";
         var serializedParams = $(form).serializeArray();
         var params = {};
 
@@ -29,14 +27,33 @@ $(document).ready(function() {
             }
         });
 
-        params['image'] = $('#image')[0].files[0];
-        console.log(params);
         if (inputValid) {
-            $.post(url, params, function(data){
-                console.log(data);
-            }, 'json').fail(function(){
-                console.log('failed');
-            });
+            processUpload();
         };
+    }
+
+    function processUpload() {
+        var url = "/cgi-bin/upload.cgi";
+        var form_data = new FormData($('form[name=new_product]')[0]);
+        form_data.append("image", $('input[type=file]')[0].files[0]);
+
+        $.ajax( {
+            url: url,
+            type: "post",
+            data: form_data,
+            processData: false,
+            contentType: false,
+            success: function(response) {
+               // $('#status').css('color','blue');
+               // $('#status').html("Your file has been received.");
+               // var fname = $("#product_image").val().toLowerCase();
+               // var toDisplay = "<img src=\"/~jadrn000/proj1_examples/ajax_upload/_p_images/" + fname + "\" />";
+               // $('#pic').html(toDisplay);
+               console.log(response);
+            },
+            error: function(response) {
+
+            }
+        });
     }
 });
