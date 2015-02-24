@@ -20,6 +20,14 @@ $(document).ready(function() {
         processDelete(sku);
     });
 
+    $(document).on('click', '.edit', function(){
+        var clickedElement = $(this);
+        var container = clickedElement.closest('#productRecord');
+        var sku = container.data('sku');
+
+        processEdit(sku);
+    });
+
     function processForm() {
         var form = $("form[name='new_product']");
         var serializedParams = $(form).serializeArray();
@@ -81,6 +89,17 @@ $(document).ready(function() {
             };
         }, 'json').fail(function(){
             alert('Failed to delete record');
+        })
+    }
+
+    function processEdit(sku) {
+        var url = "/cgi-bin/fetch_product.cgi";
+        var param = {sku: sku};
+
+        $.post(url, param, function(data){
+            console.log(data);
+        }, 'json').fail(function(){
+            alert('Failed to get record.');
         })
     }
 });
