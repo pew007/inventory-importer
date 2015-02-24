@@ -5,6 +5,7 @@ use CGI::Carp qw (fatalsToBrowser);
 use File::Basename;
 use JSON;
 use DBI;
+use Switch;
 
 ####################################################################
 ### constants
@@ -110,8 +111,29 @@ sub insert_new_product {
     my $rows = $dbh->do($statement);
     $dbh->disconnect();
 
+    my $vendorName   = find_by_id($vendor, 'vendor');
+    my $categoryName = find_by_id($category, 'category');
+    my $platformName = find_by_id($platform, 'platform');
+
+    my $html = <<EOF;
+<tr id="productRecord" data-sku=$sku role="row" class="even">
+    <td class="sorting_1">$sku</td>
+    <td>$vendorName</td>
+    <td>$categoryName</td>
+    <td>$platformName</td>
+    <td>$vendor_model</td>
+    <td>$cost</td>
+    <td>$retail</td>
+    <td><button class="edit">Edit</button></td>
+    <td><button class="delete">Delete</button></td>
+    <td class="hide">$description</td>
+    <td class="hide">$features</td>
+    <td class="hide">$new_filename</td>
+</tr>
+EOF
+
     if ($rows > 0) {
-        get_json_response('OK');
+        get_json_response($html);
     } else {
         get_json_response('Error');
     }
@@ -127,4 +149,26 @@ sub get_json_response {
     print $cgi->header('application/json');
 
     print $json_text;
+}
+
+sub find_by_id {
+    my ($id, $table) = @_;
+
+    switch ($table) {
+        case 'vendor'   {$itemId = 'vendorID'; $itemName = 'vendorName';}
+        case 'category' {$itemId = 'categoryID'; $itemName = 'categoryName';}
+        case 'platform' {$itemId = 'platformID'; $itemName = 'platformName';}
+    }
+
+    my $dbh = DBI->connect($database_source, $username, $password)
+    or die 'Cannot connect to db';
+
+    my $statement = "SELECT $itemName FROM $table WHERE $itemId = $id";
+    my $sth = $dbh->prepare($statement);
+    $sth->execute();
+    my $result = $sth->fetch()->[0];
+
+    $dbh->disconnect();
+
+    return $result;
 }

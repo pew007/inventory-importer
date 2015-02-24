@@ -50,6 +50,7 @@ $(document).ready(function() {
             processData: false,
             contentType: false,
             success: function(response) {
+                $('.products_table tbody').append(response.status);
                console.log(response);
             },
             error: function(response) {}
