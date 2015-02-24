@@ -26,7 +26,6 @@ print $cgi->header;
 render_main();
 
 sub render_main {
-
     my $vendors     = get_all('vendor');
     my $categories  = get_all('category');
     my $platforms   = get_all('platform');
@@ -60,7 +59,6 @@ sub get_all {
 }
 
 sub get_products {
-
     my $dbh = DBI->connect($database_source, $username, $password) or die 'Cannot connect to db';
     my $statement = "
         SELECT sku, vendorModel, description, features, cost, retail, image, categoryName, vendorName, platformName

@@ -98,30 +98,30 @@
                 <th>Category</th>
                 <th>Platform</th>
                 <th>Vendor Model</th>
-                <th style="display:none;">Description</th>
-                <th style="display:none;">Features</th>
                 <th>Cost</th>
                 <th>Retail</th>
-                <th style="display:none;">Image</th>
                 <th></th>
                 <th></th>
+                <th class="hide">Description</th>
+                <th class="hide">Features</th>
+                <th class="hide">Image</th>
             </tr>
         </thead>
         <tbody>
             <!-- TMPL_LOOP NAME=PRODUCTS -->
-            <tr>
+            <tr id="productRecord" data-sku="<!-- TMPL_VAR NAME=SKU -->">
                 <td><!-- TMPL_VAR NAME=SKU --></td>
                 <td><!-- TMPL_VAR NAME=VENDORNAME --></td>
                 <td><!-- TMPL_VAR NAME=CATEGORYNAME --></td>
                 <td><!-- TMPL_VAR NAME=PLATFORMNAME --></td>
                 <td><!-- TMPL_VAR NAME=VENDORMODEL --></td>
-                <td style="display:none;"><!-- TMPL_VAR NAME=DESCRIPTION --></td>
-                <td style="display:none;"><!-- TMPL_VAR NAME=FEATURES --></td>
                 <td><!-- TMPL_VAR NAME=COST --></td>
                 <td><!-- TMPL_VAR NAME=RETAIL --></td>
-                <td style="display:none;"><!-- TMPL_VAR NAME=IMAGE --></td>
-                <td><button>Edit</button></td>
-                <td><button>Delete</button></td>
+                <td><button class="edit">Edit</button></td>
+                <td><button class="delete">Delete</button></td>
+                <td class="hide"><!-- TMPL_VAR NAME=DESCRIPTION --></td>
+                <td class="hide"><!-- TMPL_VAR NAME=FEATURES --></td>
+                <td class="hide"><!-- TMPL_VAR NAME=IMAGE --></td>
             </tr>
             <!-- /TMPL_LOOP -->
         </tbody>

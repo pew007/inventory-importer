@@ -8,6 +8,14 @@ $(document).ready(function() {
         processForm();
     });
 
+    $(".delete").click(function(){
+        var clickedElement = $(this);
+        var container = clickedElement.closest('#productRecord');
+        var sku = container.data('sku');
+
+        processDelete(sku);
+    });
+
     function processForm() {
         var form = $("form[name='new_product']");
         var serializedParams = $(form).serializeArray();
@@ -27,12 +35,12 @@ $(document).ready(function() {
         });
 
         if (inputValid) {
-            processUpload();
+            processInsert();
         };
     }
 
-    function processUpload() {
-        var url = "/cgi-bin/upload.cgi";
+    function processInsert() {
+        var url = "/cgi-bin/insert.cgi";
         var form_data = new FormData($('form[name=new_product]')[0]);
 
         $.ajax( {
@@ -42,16 +50,21 @@ $(document).ready(function() {
             processData: false,
             contentType: false,
             success: function(response) {
-               // $('#status').css('color','blue');
-               // $('#status').html("Your file has been received.");
-               // var fname = $("#product_image").val().toLowerCase();
-               // var toDisplay = "<img src=\"/~jadrn000/proj1_examples/ajax_upload/_p_images/" + fname + "\" />";
-               // $('#pic').html(toDisplay);
                console.log(response);
             },
-            error: function(response) {
-
-            }
+            error: function(response) {}
         });
+    }
+
+    function processDelete(sku) {
+        var url = "/cgi-bin/delete.cgi";
+        var param = {sku: sku};
+
+        $.post(url, param, function(data){
+            var record = $("tr[data-sku='" + sku + "']");
+            record.remove();
+        }, 'json').fail(function(){
+            alert('Failed to delete record');
+        })
     }
 });
