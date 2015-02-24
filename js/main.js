@@ -1,7 +1,6 @@
 $(document).ready(function() {
 
-    $("#tabs").tabs();
-
+    $('.products_table').DataTable();
     $('[name="sku"]').focus();
 
     $("form[name='new_product'] #submit_button").click(function(){

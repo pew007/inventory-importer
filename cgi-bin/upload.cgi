@@ -13,6 +13,16 @@ my $upload_dir = '/home/vagrant/public_html/proj1/_p_images';
 my $safe_filename_chars = "a-zA-Z0-9_.-";
 ####################################################################
 
+# my $host = "opatija.sdsu.edu";
+# my $username = "jadrn048";
+# my $password = "outlet";
+my $host = '127.0.0.1';
+my $port = "3306";
+my $database = "jadrn048";
+my $username = 'root';
+my $password = "";
+my $database_source = "dbi:mysql:$database:$host:$port";
+
 my $cgi             = new CGI;
 my $sku             = $cgi->param('sku');
 my $category        = $cgi->param('category');
@@ -90,14 +100,6 @@ sub check_for_dup_sku {
 }
 
 sub insert_new_product {
-    # my $host = "opatija.sdsu.edu";
-    my $host = '127.0.0.1';
-    my $port = "3306";
-    my $database = "jadrn048";
-    # my $username = "jadrn048";
-    my $username = 'root';
-    my $password = "";
-    my $database_source = "dbi:mysql:$database:$host:$port";
 
     my $dbh = DBI->connect($database_source, $username, $password)
     or die 'Cannot connect to db';

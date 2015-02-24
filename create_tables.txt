@@ -7,19 +7,19 @@ DROP TABLE IF EXISTS platform;
 
 CREATE TABLE vendor(
     vendorID    INT     NOT NULL    auto_increment,
-    name        varchar(20) NOT NULL,
+    vendorName  varchar(20) NOT NULL,
     PRIMARY KEY (vendorID)
     );
 
 CREATE TABLE category(
-    categoryID  INT     NOT NULL    auto_increment,
-    name        varchar(20) NOT NULL,
+    categoryID      INT     NOT NULL    auto_increment,
+    categoryName    varchar(20) NOT NULL,
     PRIMARY KEY (categoryID)
     );
 
 CREATE TABLE platform(
-    platformID  INT  NOT NULL auto_increment,
-    name        varchar(20) NOT NULL,
+    platformID      INT  NOT NULL auto_increment,
+    platformName    varchar(20) NOT NULL,
     PRIMARY KEY (platformID)
     );
 

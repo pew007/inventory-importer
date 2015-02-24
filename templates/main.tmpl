@@ -3,98 +3,129 @@
 <head>
     <meta charset="utf-8">
     <title>Products</title>
+    <link rel="stylesheet" href="/css/jquery.dataTables.min.css">
+    <link rel="stylesheet" href="/css/jquery.dataTables_themeroller.css">
     <link rel="stylesheet" href="/css/main.css">
     <script src="/js/jquery.js"></script>
     <script src="/js/jquery-ui.js"></script>
+    <script src="/js/jquery.dataTables.min.js"></script>
     <script src="/js/main.js"></script>
 </head>
 <body>
-    <div id="tabs">
-      <ul>
-        <li><a href="#tabs-1">New</a></li>
-        <li><a href="#tabs-2">Edit</a></li>
-        <li><a href="#tabs-3">Delete</a></li>
-      </ul>
-      <div id="tabs-1">
-        <form method="post" enctype="multipart/form-data" name="new_product" action="">
-        <fieldset>
-            <legend>Product information:</legend>
-            <h5>All fields are required</h5>
-            <div>
-                <label class="field" for="sku">SKU:</label>
-                <input type="text" name="sku" />
-            </div>
+    <div class="new_product_container">
+    <form method="post" enctype="multipart/form-data" name="new_product" action="">
+        <h2>Product information:</h2>
+        <h5>All fields are required</h5>
+        <table class="new_product_info">
+            <tr>
+                <td>
+                    <div>
+                        <label class="field" for="sku">SKU:</label>
+                        <input type="text" name="sku" placeholder="ABC-123"/>
+                    </div>
 
-            <div>
-                <label class="field" for="category">Category:</label>
-                <select name="category">
-                    <!-- TMPL_LOOP NAME=CATEGORIES -->
-                        <option value="<!-- TMPL_VAR NAME=CATEGORYID -->"><!-- TMPL_VAR NAME=NAME --></option>
-                    <!-- /TMPL_LOOP -->
-                </select>
-            </div>
+                    <div>
+                        <label class="field" for="category">Category:</label>
+                        <select name="category">
+                            <!-- TMPL_LOOP NAME=CATEGORIES -->
+                                <option value="<!-- TMPL_VAR NAME=CATEGORYID -->"><!-- TMPL_VAR NAME=CATEGORYNAME --></option>
+                            <!-- /TMPL_LOOP -->
+                        </select>
+                    </div>
 
-            <div>
-                <label class="field" for="vendor">Vendor:</label>
-                <select name="vendor">
-                    <!-- TMPL_LOOP NAME=VENDORS -->
-                        <option value="<!-- TMPL_VAR NAME=VENDORID -->"><!-- TMPL_VAR NAME=NAME --></option>
-                    <!-- /TMPL_LOOP -->
-                </select>
-            </div>
+                    <div>
+                        <label class="field" for="vendor">Vendor:</label>
+                        <select name="vendor">
+                            <!-- TMPL_LOOP NAME=VENDORS -->
+                                <option value="<!-- TMPL_VAR NAME=VENDORID -->"><!-- TMPL_VAR NAME=VENDORNAME --></option>
+                            <!-- /TMPL_LOOP -->
+                        </select>
+                    </div>
 
-            <div>
-                <label class="field" for="platform">Platform:</label>
-                <select name="platform">
-                    <!-- TMPL_LOOP NAME=PLATFORMS -->
-                        <option value="<!-- TMPL_VAR NAME=PLATFORMID -->"><!-- TMPL_VAR NAME=NAME --></option>
-                    <!-- /TMPL_LOOP -->
-                </select>
-            </div>
+                    <div>
+                        <label class="field" for="platform">Platform:</label>
+                        <select name="platform">
+                            <!-- TMPL_LOOP NAME=PLATFORMS -->
+                                <option value="<!-- TMPL_VAR NAME=PLATFORMID -->"><!-- TMPL_VAR NAME=PLATFORMNAME --></option>
+                            <!-- /TMPL_LOOP -->
+                        </select>
+                    </div>
 
-            <div>
-                <label class="field" for="vendorModel">Manufacturer's Identifier:</label>
-                <input type="text" name="vendorModel" />
-            </div>
+                    <div>
+                        <label class="field" for="vendorModel">Manufacturer's Identifier:</label>
+                        <input type="text" name="vendorModel" />
+                    </div>
 
-            <div>
-                <label class="field" for="description">Description:</label>
-                <textarea rows="4" cols="50" name="description"></textarea>
-            </div>
+                    <div>
+                        <label class="field" for="cost">Cost:</label>
+                        <input type="text" name="cost" placeholder="0.00"/>
+                    </div>
 
-            <div>
-                <label class="field" for="features">Product Features:</label>
-                <textarea rows="4" cols="50" name="features"></textarea>
-            </div>
+                    <div>
+                        <label class="field" for="retail">Retail:</label>
+                        <input type="text" name="retail" placeholder="0.00"/>
+                    </div>
+                </td>
+                <td>
+                    <div>
+                        <label class="field" for="description">Description:</label>
+                        <textarea rows="4" cols="50" name="description"></textarea>
+                    </div>
 
-            <div>
-                <label class="field" for="cost">Cost:</label>
-                <input type="text" name="cost" />
-            </div>
+                    <div>
+                        <label class="field" for="features">Product Features:</label>
+                        <textarea rows="4" cols="50" name="features"></textarea>
+                    </div>
 
-            <div>
-                <label class="field" for="retail">Retail:</label>
-                <input type="text" name="retail" />
-            </div>
+                    <div>
+                        <label class="field" for="image">Image:</label>
+                        <input type="file" name="image" id="image" />
+                    </div>
+                </td>
+            </tr>
+        </table>
+        <input type="reset" value="Clear" />
+        <input type="button" value="Add Product" id="submit_button" />
+    </form>
+    </div>
 
-            <div>
-                <label class="field" for="image">Image:</label>
-                <input type="file" name="image" id="image" />
-            </div>
-
-            <input type="reset" value="Clear" />
-            <input type="button" value="Add Product" id="submit_button" />
-        </fieldset>
-        </form>
-      </div>
-
-      <div id="tabs-2">
-        Edit
-      </div>
-
-      <div id="tabs-3">
-        Delete
-      </div>
+    <div class="products_container">
+        <table class="products_table" >
+            <thead>
+            <tr>
+                <th>SKU</th>
+                <th>Vendor</th>
+                <th>Category</th>
+                <th>Platform</th>
+                <th>Vendor Model</th>
+                <th>Description</th>
+                <th>Features</th>
+                <th>Cost</th>
+                <th>Retail</th>
+                <th>Image</th>
+                <th></th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- TMPL_LOOP NAME=PRODUCTS -->
+            <tr>
+                <td><!-- TMPL_VAR NAME=SKU --></td>
+                <td><!-- TMPL_VAR NAME=VENDORNAME --></td>
+                <td><!-- TMPL_VAR NAME=CATEGORYNAME --></td>
+                <td><!-- TMPL_VAR NAME=PLATFORMNAME --></td>
+                <td><!-- TMPL_VAR NAME=VENDORMODEL --></td>
+                <td><!-- TMPL_VAR NAME=DESCRIPTION --></td>
+                <td><!-- TMPL_VAR NAME=FEATURES --></td>
+                <td><!-- TMPL_VAR NAME=COST --></td>
+                <td><!-- TMPL_VAR NAME=RETAIL --></td>
+                <td><!-- TMPL_VAR NAME=IMAGE --></td>
+                <td><button>Edit</button></td>
+                <td><button>Delete</button></td>
+            </tr>
+            <!-- /TMPL_LOOP -->
+        </tbody>
+        </table>
     </div>
 
     <!-- <a href='/cgi-bin/logout.cgi'>Logout Now</a> -->
