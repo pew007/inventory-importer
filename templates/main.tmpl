@@ -27,27 +27,27 @@
                     <div>
                         <label class="field" for="category">Category:</label>
                         <select name="category">
-                            <!-- TMPL_LOOP NAME=CATEGORIES -->
-                                <option value="<!-- TMPL_VAR NAME=CATEGORYID -->"><!-- TMPL_VAR NAME=CATEGORYNAME --></option>
-                            <!-- /TMPL_LOOP -->
+                            <TMPL_LOOP NAME=CATEGORIES>
+                                <option value="<TMPL_VAR NAME=CATEGORYID>"><TMPL_VAR NAME=CATEGORYNAME></option>
+                            </TMPL_LOOP>
                         </select>
                     </div>
 
                     <div>
                         <label class="field" for="vendor">Vendor:</label>
                         <select name="vendor">
-                            <!-- TMPL_LOOP NAME=VENDORS -->
-                                <option value="<!-- TMPL_VAR NAME=VENDORID -->"><!-- TMPL_VAR NAME=VENDORNAME --></option>
-                            <!-- /TMPL_LOOP -->
+                            <TMPL_LOOP NAME=VENDORS>
+                                <option value="<TMPL_VAR NAME=VENDORID>"><TMPL_VAR NAME=VENDORNAME></option>
+                            </TMPL_LOOP>
                         </select>
                     </div>
 
                     <div>
                         <label class="field" for="platform">Platform:</label>
                         <select name="platform">
-                            <!-- TMPL_LOOP NAME=PLATFORMS -->
-                                <option value="<!-- TMPL_VAR NAME=PLATFORMID -->"><!-- TMPL_VAR NAME=PLATFORMNAME --></option>
-                            <!-- /TMPL_LOOP -->
+                            <TMPL_LOOP NAME=PLATFORMS>
+                                <option value="<TMPL_VAR NAME=PLATFORMID>"><TMPL_VAR NAME=PLATFORMNAME></option>
+                            </TMPL_LOOP>
                         </select>
                     </div>
 
@@ -89,6 +89,7 @@
     </form>
     </div>
 
+
     <div class="products_container">
         <table class="products_table" >
             <thead>
@@ -107,26 +108,29 @@
                 <th class="hide">Image</th>
             </tr>
         </thead>
+        <TMPL_IF NAME=PRODUCTS>
         <tbody>
-            <!-- TMPL_LOOP NAME=PRODUCTS -->
-            <tr id="productRecord" data-sku="<!-- TMPL_VAR NAME=SKU -->">
-                <td><!-- TMPL_VAR NAME=SKU --></td>
-                <td><!-- TMPL_VAR NAME=VENDORNAME --></td>
-                <td><!-- TMPL_VAR NAME=CATEGORYNAME --></td>
-                <td><!-- TMPL_VAR NAME=PLATFORMNAME --></td>
-                <td><!-- TMPL_VAR NAME=VENDORMODEL --></td>
-                <td><!-- TMPL_VAR NAME=COST --></td>
-                <td><!-- TMPL_VAR NAME=RETAIL --></td>
+            <TMPL_LOOP NAME=PRODUCTS>
+            <tr id="productRecord" data-sku="<TMPL_VAR NAME=SKU>">
+                <td><TMPL_VAR NAME=SKU></td>
+                <td><TMPL_VAR NAME=VENDORNAME></td>
+                <td><TMPL_VAR NAME=CATEGORYNAME></td>
+                <td><TMPL_VAR NAME=PLATFORMNAME></td>
+                <td><TMPL_VAR NAME=VENDORMODEL></td>
+                <td><TMPL_VAR NAME=COST></td>
+                <td><TMPL_VAR NAME=RETAIL></td>
                 <td><button class="edit">Edit</button></td>
                 <td><button class="delete">Delete</button></td>
-                <td class="hide"><!-- TMPL_VAR NAME=DESCRIPTION --></td>
-                <td class="hide"><!-- TMPL_VAR NAME=FEATURES --></td>
-                <td class="hide"><!-- TMPL_VAR NAME=IMAGE --></td>
+                <td class="hide"><TMPL_VAR NAME=DESCRIPTION></td>
+                <td class="hide"><TMPL_VAR NAME=FEATURES></td>
+                <td class="hide"><TMPL_VAR NAME=IMAGE></td>
             </tr>
-            <!-- /TMPL_LOOP -->
+            </TMPL_LOOP>
         </tbody>
+        </TMPL_IF>
         </table>
     </div>
+
 
     <!-- <a href='/cgi-bin/logout.cgi'>Logout Now</a> -->
 

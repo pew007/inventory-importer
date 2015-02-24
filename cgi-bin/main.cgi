@@ -29,7 +29,7 @@ sub render_main {
     my $vendors     = get_all('vendor');
     my $categories  = get_all('category');
     my $platforms   = get_all('platform');
-    my $products    = get_products();
+    my $products    = get_products() || [];
 
     # instantiate the template and substitute the values
     my $template = HTML::Template->new(filename => '/vagrant/templates/main.tmpl');

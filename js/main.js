@@ -1,6 +1,10 @@
 $(document).ready(function() {
 
+    // Use DataTable to display products
+    // DataTable provides sorting, search, and pagination
+    // Source: http://www.datatables.net/
     $('.products_table').DataTable();
+
     $('[name="sku"]').focus();
 
     $("form[name='new_product'] #submit_button").click(function(){
@@ -8,7 +12,7 @@ $(document).ready(function() {
         processForm();
     });
 
-    $(".delete").click(function(){
+    $(document).on('click', '.delete', function(){
         var clickedElement = $(this);
         var container = clickedElement.closest('#productRecord');
         var sku = container.data('sku');
@@ -50,8 +54,11 @@ $(document).ready(function() {
             processData: false,
             contentType: false,
             success: function(response) {
+                var emptyDataRow = $('.dataTables_empty');
+                if (emptyDataRow) {
+                    emptyDataRow.remove();
+                };
                 $('.products_table tbody').append(response.status);
-               console.log(response);
             },
             error: function(response) {}
         });
@@ -64,6 +71,14 @@ $(document).ready(function() {
         $.post(url, param, function(data){
             var record = $("tr[data-sku='" + sku + "']");
             record.remove();
+
+            // Get number of records and if there was only 1 record left in the table
+            // then display no data available after deletion
+            var records = $('.products_table tbody tr');
+            if (records.length == 1) {
+                var emptyDataRow = "<td valign='top' colspan='12' class='dataTables_empty'>No data available in table</td>";
+                $('.products_table tbody').append(emptyDataRow);
+            };
         }, 'json').fail(function(){
             alert('Failed to delete record');
         })
