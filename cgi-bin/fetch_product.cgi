@@ -47,9 +47,9 @@ get_json_response($results);
 
 sub get_json_response {
 
-    my ($status) = @_;
+    my ($result) = @_;
 
-    my $json->{"result"} = $status;
+    my $json->{"result"} = $result;
     my $json_text = to_json($json);
 
     print $cgi->header('application/json');

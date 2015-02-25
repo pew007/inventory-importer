@@ -7,10 +7,16 @@ $(document).ready(function() {
 
     $('[name="sku"]').focus();
 
-    $("form[name='new_product'] #submit_button").click(function(){
-        $('.form-error').remove();
-        processForm();
-    });
+    $(document).on('click', '.add_new_product', function(){
+        var button = $(this);
+
+        if (button.val() == 'Add Product') {
+            $('.form-error').remove();
+            processForm();
+        } else {
+            processEdit();
+        }
+    })
 
     $(document).on('click', '.delete', function(){
         var clickedElement = $(this);
@@ -25,7 +31,7 @@ $(document).ready(function() {
         var container = clickedElement.closest('#productRecord');
         var sku = container.data('sku');
 
-        processEdit(sku);
+        fetchProductInfo(sku);
     });
 
     function processForm() {
@@ -39,7 +45,7 @@ $(document).ready(function() {
             if (field.value == '') {
                 inputValid = false;
                 currentField.addClass('error-field');
-                currentField.after("<span class='form-error'> <-- This field is required</span>");
+                currentField.after("<span class='form-error'>");
             } else {
                 currentField.removeClass('error-field');
                 params[field.name] = field.value;
@@ -83,7 +89,7 @@ $(document).ready(function() {
             // Get number of records and if there was only 1 record left in the table
             // then display no data available after deletion
             var records = $('.products_table tbody tr');
-            if (records.length == 1) {
+            if (records.length == 0) {
                 var emptyDataRow = "<td valign='top' colspan='12' class='dataTables_empty'>No data available in table</td>";
                 $('.products_table tbody').append(emptyDataRow);
             };
@@ -92,14 +98,36 @@ $(document).ready(function() {
         })
     }
 
-    function processEdit(sku) {
+    function fetchProductInfo(sku) {
+        var container = $("#productRecord[data-sku='" + sku + "']");
         var url = "/cgi-bin/fetch_product.cgi";
         var param = {sku: sku};
 
         $.post(url, param, function(data){
-            console.log(data);
+            var product = data.result[0];
+            var image_url = "/_p_images/" + product.image;
+            var button = $('.add_new_product');
+
+            $("input[name='sku']").val(product.sku).attr('readonly', true);
+            $("select[name='category']").val(product.categoryID);
+            $("select[name='vendor']").val(product.vendorID);
+            $("select[name='platform']").val(product.platformID);
+            $("input[name='vendorModel']").val(product.vendorModel);
+            $("input[name='cost']").val(product.cost);
+            $("input[name='retail']").val(product.retail);
+            $("textarea[name='description']").val(product.description);
+            $("textarea[name='features']").val(product.features);
+            $("#product-image").attr('src', image_url).removeClass('hide');
+
+            button.val('Update Product');
+
         }, 'json').fail(function(){
             alert('Failed to get record.');
         })
     }
+
+    function processEdit() {
+
+    }
+
 });
