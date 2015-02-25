@@ -10,7 +10,7 @@ $(document).ready(function() {
     $(document).on('click', '.add_new_product', function(){
         var button = $(this);
 
-        if (button.val() == 'Add Product') {
+        if (button.text() == 'Add Product') {
             $('.form-error').remove();
             processForm();
         } else {
@@ -33,6 +33,18 @@ $(document).ready(function() {
 
         fetchProductInfo(sku);
     });
+
+    $(document).on('click', '.reset', function(){
+        resetForm();
+    });
+
+    function resetForm() {
+        var form = $("form[name='new_product']");
+        form.find("input").val('');
+        form.find("textarea").val('');
+        form.find("select").val(1);
+        form.find("img").hide();
+    }
 
     function processForm() {
         var form = $("form[name='new_product']");
@@ -117,9 +129,9 @@ $(document).ready(function() {
             $("input[name='retail']").val(product.retail);
             $("textarea[name='description']").val(product.description);
             $("textarea[name='features']").val(product.features);
-            $("#product-image").attr('src', image_url).removeClass('hide');
+            $("#product-image").attr('src', image_url).show();
 
-            button.val('Update Product');
+            button.text('Update Product');
 
         }, 'json').fail(function(){
             alert('Failed to get record.');
