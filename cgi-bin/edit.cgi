@@ -18,8 +18,8 @@ my $safe_filename_chars = "a-zA-Z0-9_.-";
 # my $host = "opatija.sdsu.edu";
 # my $username = "jadrn048";
 # my $password = "outlet";
-my $host = '127.0.0.1';
-my $port = "3306";
+my $host     = '127.0.0.1';
+my $port     = "3306";
 my $database = "jadrn048";
 my $username = 'root';
 my $password = "";
@@ -36,12 +36,12 @@ my $features        = $cgi->param('features');
 my $cost            = $cgi->param('cost');
 my $retail          = $cgi->param('retail');
 my $filename        = $cgi->param("image");
+my $new_filename    = get_new_filename($filename);
 
 print $cgi->header;
 
 if (validate_session()) {
     if ($filename ne undef) {
-        my $new_filename = get_new_filename($filename);
         upload_image();
     }
     update_product();
