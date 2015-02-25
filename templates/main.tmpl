@@ -85,9 +85,9 @@
                 </td>
             </tr>
         </table>
-        <input type="reset" value="Clear" class="btn"/>
-        <input type="button" value="Add Product" id="submit_button" class="btn add_new_product" />
     </form>
+        <button class="reset">Clear</button>
+        <button class="add_new_product" id="submit_button">Add Product</button>
     </div>
 
     <div class="products_container">
@@ -131,7 +131,8 @@
         </table>
     </div>
 
-    <!-- <a href='/cgi-bin/logout.cgi'>Logout Now</a> -->
-
+    <form action="/cgi-bin/logout.cgi">
+        <button>Logout Now</button>
+    </form>
 </body>
 </html>

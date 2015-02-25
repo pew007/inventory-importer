@@ -44,19 +44,34 @@ sub authenticate_user {
 }
 
 sub send_to_login_error {
-    print $cgi->redirect('http://localhost:8081/error.html');
+    print <<END;
+Content-type:  text/html
+
+<html>
+<head>
+    <meta http-equiv="refresh"
+        content="0; url=http://localhost:8081/index.html" />
+</head><body></body>
+</html>
+
+END
 }
 
 sub send_to_main {
-    # Retrive session from cookie or create a new one
-    my $cookie_sid = $cgi->cookie('jadrn048SID') || undef;
-    my $session = new CGI::Session(undef, $cookie_sid, {Directory=>'/tmp'});
+    my $session = new CGI::Session(undef, undef, {Directory=>'/tmp'});
+    $session->expires('+1d');
+    my $cookie = $cgi->cookie(jadrn048SID => $session->id);
+    print $cgi->header( -cookie=>$cookie );
 
-    my $token = Session::Token->new->get;
-    my $token_in_session = $session->param('token');
+    print <<END;
+Content-type:  text/html
 
-    # Set cookie
-    # print $cgi->header('-cookie' => $cgi->cookie(jadrn048SID => $session->id));
+<html>
+<head>
+    <meta http-equiv="refresh"
+        content="0; url=http://localhost:8081/cgi-bin/main.cgi" />
+</head><body></body>
+</html>
 
-    print $cgi->redirect('http://localhost:8081/cgi-bin/main.cgi');
+END
 }

@@ -21,9 +21,38 @@ my $username = 'root';
 my $password = "";
 my $database_source = "dbi:mysql:$database:$host:$port";
 
+my $cgi = new CGI;
 print $cgi->header;
 
-render_main();
+if (validate_session()) {
+    render_main();
+} else {
+    send_to_login_error();
+}
+
+sub validate_session {
+    my $cookie_sid = $cgi->cookie('jadrn048SID');
+    my $session = new CGI::Session(undef, $cookie_sid, {Directory=>'/tmp'});
+    my $sid = $session->id;
+
+    if($cookie_sid ne $sid) {
+        return 0;
+    } else {return 1;}
+}
+
+sub send_to_login_error {
+    print <<END;
+Content-type:  text/html
+
+<html>
+<head>
+    <meta http-equiv="refresh"
+        content="0; url=http://localhost:8081/index.html" />
+</head><body></body>
+</html>
+
+END
+}
 
 sub render_main {
     my $vendors     = get_all('vendor');

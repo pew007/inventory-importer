@@ -8,23 +8,20 @@ my $cgi = new CGI;
 my $cookie_sid = $cgi->cookie("jadrn048SID") || undef;
 
 $session = new CGI::Session(undef, $cookie_sid, {Directory => '/tmp'});
-# $session->delete();
-$session->clear(['token']);
+$session->delete();
 
-print $cgi->header(
-    '-cookie'        => $cgi->cookie(jadrn048SID => $session->id),
-    '-Cache-Control' => 'must-revalidate, max-age=0, no-store, no-cache'
-    );
+my $cookie = $cgi->cookie(jadrn048SID => '');
+print $cgi->header( -cookie=>$cookie );
 
 
-print "session id is " . $session->id . "<br><br>";
-print "token in session is " . $session->param('token');
-# print <<END
+# Redirect back to main.cgi and since the cookie doesn't have a valid session id
+# authentication will fail thus preventing the user to go back to the previous page
+print <<END
 
-# <html>
-# <head>
-#     <meta http-equiv="refresh" content="0; url=http://localhost:8081/index.html">
-# </head>
-# </html>
+<html>
+<head>
+    <meta http-equiv="refresh" content="0; url=http://localhost:8081/cgi-bin/main.cgi">
+</head>
+</html>
 
-# END
+END
