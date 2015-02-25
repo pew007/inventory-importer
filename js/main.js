@@ -127,7 +127,23 @@ $(document).ready(function() {
     }
 
     function processEdit() {
+        var url = "/cgi-bin/edit.cgi";
+        var form_data = new FormData($('form[name=new_product]')[0]);
 
+        $.ajax( {
+            url: url,
+            type: "post",
+            data: form_data,
+            processData: false,
+            contentType: false,
+            success: function(response) {
+                var sku = $('[name="sku"]').val();
+                var newRow = response.result;
+                var currentRow = $("#productRecord[data-sku='" + sku + "']");
+                currentRow.replaceWith(newRow);
+            },
+            error: function(response) {}
+        });
     }
 
 });
