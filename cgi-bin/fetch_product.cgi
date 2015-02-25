@@ -5,12 +5,6 @@ use CGI::Carp qw (fatalsToBrowser);
 use JSON;
 use DBI;
 
-####################################################################
-### constants
-my $upload_dir = '/home/vagrant/public_html/proj1/_p_images';
-my $safe_filename_chars = "a-zA-Z0-9_.-";
-####################################################################
-
 # my $host = "opatija.sdsu.edu";
 # my $username = "jadrn048";
 # my $password = "outlet";

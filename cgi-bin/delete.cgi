@@ -5,11 +5,7 @@ use CGI::Carp qw (fatalsToBrowser);
 use JSON;
 use DBI;
 
-####################################################################
-### constants
 my $upload_dir = '/home/vagrant/public_html/proj1/_p_images';
-my $safe_filename_chars = "a-zA-Z0-9_.-";
-####################################################################
 
 # my $host = "opatija.sdsu.edu";
 # my $username = "jadrn048";
@@ -23,6 +19,9 @@ my $database_source = "dbi:mysql:$database:$host:$port";
 
 my $cgi = new CGI;
 my $sku = $cgi->param('sku');
+
+my $filename = $upload_dir . "/" . lc($sku) . ".jpg";
+unlink($filename);
 
 my $dbh = DBI->connect($database_source, $username, $password)
 or die 'Cannot connect to db';
