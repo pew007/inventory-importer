@@ -9,12 +9,12 @@ $(document).ready(function() {
 
     $(document).on('click', '.add_new_product', function(){
         var button = $(this);
-
-        if (button.text() == 'Add Product') {
-            $('.form-error').remove();
-            processForm();
-        } else {
-            processEdit();
+        if (isFormValid()) {
+            if (button.text() == 'Add Product') {
+                processInsert();
+            } else {
+                processEdit();
+            }
         }
     })
 
@@ -40,33 +40,75 @@ $(document).ready(function() {
 
     function resetForm() {
         var form = $("form[name='new_product']");
-        form.find("input").val('');
+        var button = $(".add_new_product");
+
+        form.find("input").val('').attr('readonly', false);
         form.find("textarea").val('');
         form.find("select").val(1);
         form.find("img").hide();
+        button.text('Add Product');
+        $('.error_input').removeClass('error_input');
     }
 
-    function processForm() {
+    function isFormValid() {
         var form = $("form[name='new_product']");
         var serializedParams = $(form).serializeArray();
-        var params = {};
+        var fieldsNotEmpty = true;
+        var validSku = false;
+        var validCost = false;
+        var validRetail = false;
+        var isValid = false;
 
-        var inputValid = true;
         $.each(serializedParams, function(index, field){
             var currentField = $("*[name='" + field.name + "']");
+            // Check for empty input
             if (field.value == '') {
-                inputValid = false;
-                currentField.addClass('error-field');
-                currentField.after("<span class='form-error'>");
-            } else {
-                currentField.removeClass('error-field');
-                params[field.name] = field.value;
+                fieldsNotEmpty = false;
+                currentField.addClass('error_input');
+                currentField.attr('placeholder', 'Required');
+            } else { // Validate SKU, Cost, Retail
+                currentField.removeClass('error_input');
+                if (field.name == 'sku') {
+                    validSku = isValidSku(field);
+                }
+
+                if (field.name == 'cost') {
+                    validCost = isValidCurrency(field);
+                }
+
+                if (field.name == 'retail') {
+                    validRetail = isValidCurrency(field);
+                }
             }
         });
 
-        if (inputValid) {
-            processInsert();
-        };
+        if ( validSku && validCost && validRetail && fieldsNotEmpty ) {
+            isValid = true;
+        }
+
+        return isValid;
+    }
+
+    function isValidSku(field) {
+        var currentField = $("*[name='" + field.name + "']");
+        if (field.value.match(/^[A-Z]{3}-{1}[0-9]{3}$/)) {
+            return true;
+        } else {
+            currentField.addClass('error_input');
+            currentField.val('Invalid SKU format');
+            return false;
+        }
+    }
+
+    function isValidCurrency(field) {
+        var currentField = $("*[name='" + field.name + "']");
+        if (field.value.match(/^[0-9]{0,}(\.[0-9]{2})?$/)) {
+            return true;
+        } else {
+            currentField.addClass('error_input');
+            currentField.val('Invalid currency format');
+            return false;
+        }
     }
 
     function processInsert() {

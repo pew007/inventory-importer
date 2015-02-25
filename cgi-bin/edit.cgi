@@ -44,7 +44,6 @@ if ($filename ne undef) {
 
 update_product();
 
-
 sub upload_image {
 
     unless($filename) {

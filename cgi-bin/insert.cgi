@@ -37,11 +37,39 @@ my $retail          = $cgi->param('retail');
 my $filename        = $cgi->param("image");
 
 # Use SKU as new filename
-my $new_filename    = get_new_filename($filename);
+my $new_filename = get_new_filename($filename);
 
-upload_image();
-check_for_dup_sku();
-insert_new_product();
+my $check_dup_sku = is_valid_sku();
+if ($check_dup_sku eq 'OK') {
+    upload_image();
+    insert_new_product();
+} else {
+    get_json_response('Error');
+}
+
+sub is_valid_sku {
+
+    my $response = '';
+
+    my $dbh = DBI->connect($database_source, $username, $password)
+    or die 'Cannot connect to db';
+
+    my $query = "SELECT sku FROM product WHERE sku='$sku';";
+    my $sth = $dbh->prepare($query);
+    $sth->execute();
+    my $result = $sth->fetch()->[0];
+
+    if ($result eq $sku) {
+        $response = 'Duplicated SKU.';
+    } else {
+        $response = 'OK'
+    }
+
+    $sth->finish();
+    $dbh->disconnect();
+
+    return $response;
+}
 
 sub upload_image {
 
@@ -96,10 +124,6 @@ sub untaint {
     return $1;
 }
 
-sub check_for_dup_sku {
-    # body...
-}
-
 sub insert_new_product {
 
     my $dbh = DBI->connect($database_source, $username, $password)
@@ -141,9 +165,9 @@ EOF
 
 sub get_json_response {
 
-    my ($status) = @_;
+    my ($result) = @_;
 
-    my $json->{"status"} = $status;
+    my $json->{"result"} = $result;
     my $json_text = to_json($json);
 
     print $cgi->header('application/json');
