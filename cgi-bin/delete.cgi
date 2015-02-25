@@ -1,6 +1,7 @@
 #!/usr/bin/perl
 
 use CGI;
+use CGI::Session;
 use CGI::Carp qw (fatalsToBrowser);
 use JSON;
 use DBI;
@@ -23,27 +24,40 @@ my $sku = $cgi->param('sku');
 my $filename = $upload_dir . "/" . lc($sku) . ".jpg";
 unlink($filename);
 
-my $dbh = DBI->connect($database_source, $username, $password)
-or die 'Cannot connect to db';
+print $cgi->header;
 
-my $statement = "DELETE FROM product WHERE sku = '$sku'";
-my $rows = $dbh->do($statement);
-$dbh->disconnect();
+if (validate_session()) {
+    my $dbh = DBI->connect($database_source, $username, $password)
+    or die 'Cannot connect to db';
 
-if ($rows > 0) {
-    get_json_response('OK');
+    my $statement = "DELETE FROM product WHERE sku = '$sku'";
+    my $rows = $dbh->do($statement);
+    $dbh->disconnect();
+
+    if ($rows > 0) {
+        get_json_response('OK', 'Product removed.');
+    } else {
+        get_json_response('Error', 'Failed to remove product.');
+    }
 } else {
-    get_json_response('Error');
+    get_json_response('SessionError', 'Invalid session.');
 }
 
 sub get_json_response {
+    my ($status, $message) = @_;
 
-    my ($status) = @_;
+    my %response_hash = ('status' => $status, 'message' => $message);
+    my $json = encode_json \%response_hash;
 
-    my $json->{"status"} = $status;
-    my $json_text = to_json($json);
+    print $json;
+}
 
-    print $cgi->header('application/json');
+sub validate_session {
+    my $cookie_sid = $cgi->cookie('jadrn048SID');
+    my $session = new CGI::Session(undef, $cookie_sid, {Directory=>'/tmp'});
+    my $sid = $session->id;
 
-    print $json_text;
+    if($cookie_sid ne $sid) {
+        return 0;
+    } else {return 1;}
 }

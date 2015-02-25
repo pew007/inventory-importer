@@ -1,6 +1,7 @@
 #!/usr/bin/perl
 
 use CGI;
+use CGI::Session;
 use CGI::Carp qw (fatalsToBrowser);
 use File::Basename;
 use JSON;
@@ -36,19 +37,22 @@ my $cost            = $cgi->param('cost');
 my $retail          = $cgi->param('retail');
 my $filename        = $cgi->param("image");
 
-if ($filename ne undef) {
-    # Use SKU as new filename
-    my $new_filename = get_new_filename($filename);
-    upload_image();
-}
+print $cgi->header;
 
-update_product();
+if (validate_session()) {
+    if ($filename ne undef) {
+        my $new_filename = get_new_filename($filename);
+        upload_image();
+    }
+    update_product();
+} else {
+    get_json_response('SessionError', 'Invalid session.');
+}
 
 sub upload_image {
 
     unless($filename) {
-        die "There was a problem uploading the image; ".
-            "it's probably too big.";
+        get_json_response('Error', 'Empty filename.');
     }
 
     my $mimetype = $cgi->uploadInfo($filename)->{'Content-Type'};
@@ -102,9 +106,6 @@ sub update_product {
     my $dbh = DBI->connect($database_source, $username, $password)
     or die 'Cannot connect to db';
 
-    # my $statement = "INSERT INTO product values(" .
-    #     "'$sku', $category, $vendor, $platform, '$vendor_model', '$description', '$features', $cost, $retail, '$new_filename');";
-
     my $statement = "
 UPDATE product
 SET categoryID = $category,
@@ -143,19 +144,16 @@ WHERE sku = '$sku'";
 </tr>
 EOF
 
-    get_json_response($html);
+    get_json_response('OK', $html);
 }
 
 sub get_json_response {
+    my ($status, $message) = @_;
 
-    my ($result) = @_;
+    my %response_hash = ('status' => $status, 'message' => $message);
+    my $json = encode_json \%response_hash;
 
-    my $json->{"result"} = $result;
-    my $json_text = to_json($json);
-
-    print $cgi->header('application/json');
-
-    print $json_text;
+    print $json;
 }
 
 sub find_by_id {
@@ -178,4 +176,14 @@ sub find_by_id {
     $dbh->disconnect();
 
     return $result;
+}
+
+sub validate_session {
+    my $cookie_sid = $cgi->cookie('jadrn048SID');
+    my $session = new CGI::Session(undef, $cookie_sid, {Directory=>'/tmp'});
+    my $sid = $session->id;
+
+    if($cookie_sid ne $sid) {
+        return 0;
+    } else {return 1;}
 }

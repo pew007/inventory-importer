@@ -121,12 +121,20 @@ $(document).ready(function() {
             data: form_data,
             processData: false,
             contentType: false,
+            dataType: 'json',
             success: function(response) {
-                var emptyDataRow = $('.dataTables_empty');
-                if (emptyDataRow) {
-                    emptyDataRow.remove();
-                };
-                $('.products_table tbody').append(response.status);
+                if (response.status == 'OK') {
+                    var emptyDataRow = $('.dataTables_empty');
+                    if (emptyDataRow) {
+                        emptyDataRow.remove();
+                    };
+                    $('.products_table tbody').append(response.status);
+                } else if (response.status == 'Error') {
+                    $('.error').html(response.message);
+                    console.log(response.message);
+                } else if (response.status == 'SessionError') {
+                    location.reload();
+                }
             },
             error: function(response) {}
         });
@@ -136,17 +144,24 @@ $(document).ready(function() {
         var url = "/cgi-bin/delete.cgi";
         var param = {sku: sku};
 
-        $.post(url, param, function(data){
-            var record = $("tr[data-sku='" + sku + "']");
-            record.remove();
+        $.post(url, param, function(response){
+            if (response.status == 'OK') {
+                var record = $("tr[data-sku='" + sku + "']");
+                record.remove();
 
-            // Get number of records and if there was only 1 record left in the table
-            // then display no data available after deletion
-            var records = $('.products_table tbody tr');
-            if (records.length == 0) {
-                var emptyDataRow = "<td valign='top' colspan='12' class='dataTables_empty'>No data available in table</td>";
-                $('.products_table tbody').append(emptyDataRow);
-            };
+                // Get number of records and if there was only 1 record left in the table
+                // then display no data available after deletion
+                var records = $('.products_table tbody tr');
+                if (records.length == 0) {
+                    var emptyDataRow = "<td valign='top' colspan='12' class='dataTables_empty'>No data available in table</td>";
+                    $('.products_table tbody').append(emptyDataRow);
+                };
+            } else if (response.status == 'Error') {
+                $('.error').html(response.message);
+                console.log(response.message);
+            } else if (response.status == 'SessionError') {
+                location.reload();
+            }
         }, 'json').fail(function(){
             alert('Failed to delete record');
         })
@@ -190,11 +205,19 @@ $(document).ready(function() {
             data: form_data,
             processData: false,
             contentType: false,
+            dataType: 'json',
             success: function(response) {
-                var sku = $('[name="sku"]').val();
-                var newRow = response.result;
-                var currentRow = $("#productRecord[data-sku='" + sku + "']");
-                currentRow.replaceWith(newRow);
+                if (response.status == 'OK') {
+                    var sku = $('[name="sku"]').val();
+                    var newRow = response.result;
+                    var currentRow = $("#productRecord[data-sku='" + sku + "']");
+                    currentRow.replaceWith(newRow);
+                } else if (response.status == 'Error') {
+                    $('.error').html(response.message);
+                    console.log(response.message);
+                } else if (response.status == 'SessionError') {
+                    location.reload();
+                }
             },
             error: function(response) {}
         });

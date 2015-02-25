@@ -1,6 +1,7 @@
 #!/usr/bin/perl
 
 use CGI;
+use CGI::Session;
 use CGI::Carp qw (fatalsToBrowser);
 use File::Basename;
 use JSON;
@@ -24,7 +25,7 @@ my $username = 'root';
 my $password = "";
 my $database_source = "dbi:mysql:$database:$host:$port";
 
-my $cgi             = new CGI;
+my $cgi = new CGI;
 my $sku             = $cgi->param('sku');
 my $category        = $cgi->param('category');
 my $vendor          = $cgi->param('vendor');
@@ -39,16 +40,21 @@ my $filename        = $cgi->param("image");
 # Use SKU as new filename
 my $new_filename = get_new_filename($filename);
 
-my $check_dup_sku = is_valid_sku();
-if ($check_dup_sku eq 'OK') {
-    upload_image();
-    insert_new_product();
+print $cgi->header;
+
+if (validate_session()) {
+    my $check_dup_sku = is_valid_sku();
+    if ($check_dup_sku eq 'OK') {
+        upload_image();
+        insert_new_product();
+    } else {
+        get_json_response('Error', 'Duplicated SKU.');
+    }
 } else {
-    get_json_response('Error');
+    get_json_response('SessionError', 'Invalid session.');
 }
 
 sub is_valid_sku {
-
     my $response = '';
 
     my $dbh = DBI->connect($database_source, $username, $password)
@@ -57,12 +63,12 @@ sub is_valid_sku {
     my $query = "SELECT sku FROM product WHERE sku='$sku';";
     my $sth = $dbh->prepare($query);
     $sth->execute();
-    my $result = $sth->fetch()->[0];
+    my $result = $sth->fetch();
 
-    if ($result eq $sku) {
-        $response = 'Duplicated SKU.';
+    if ($result eq undef) {
+        $response = 'OK';
     } else {
-        $response = 'OK'
+        $response = 'Duplicated SKU.'
     }
 
     $sth->finish();
@@ -72,7 +78,6 @@ sub is_valid_sku {
 }
 
 sub upload_image {
-
     unless($filename) {
         die "There was a problem uploading the image; ".
             "it's probably too big.";
@@ -157,22 +162,19 @@ sub insert_new_product {
 EOF
 
     if ($rows > 0) {
-        get_json_response($html);
+        get_json_response('OK', $html);
     } else {
-        get_json_response('Error');
+        get_json_response('Error', 'Failed to add new product.');
     }
 }
 
 sub get_json_response {
+    my ($status, $message) = @_;
 
-    my ($result) = @_;
+    my %response_hash = ('status' => $status, 'message' => $message);
+    my $json = encode_json \%response_hash;
 
-    my $json->{"result"} = $result;
-    my $json_text = to_json($json);
-
-    print $cgi->header('application/json');
-
-    print $json_text;
+    print $json;
 }
 
 sub find_by_id {
@@ -195,4 +197,14 @@ sub find_by_id {
     $dbh->disconnect();
 
     return $result;
+}
+
+sub validate_session {
+    my $cookie_sid = $cgi->cookie('jadrn048SID');
+    my $session = new CGI::Session(undef, $cookie_sid, {Directory=>'/tmp'});
+    my $sid = $session->id;
+
+    if($cookie_sid ne $sid) {
+        return 0;
+    } else {return 1;}
 }
