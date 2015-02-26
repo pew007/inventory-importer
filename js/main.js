@@ -16,6 +16,8 @@ $(document).ready(function() {
                 processEdit();
             }
         }
+
+        return false;
     })
 
     $(document).on('click', '.delete', function(){
@@ -34,7 +36,7 @@ $(document).ready(function() {
         fetchProductInfo(sku);
     });
 
-    $(document).on('click', '.reset', function(){
+    $(document).on('click', '.reset_form', function(){
         resetForm();
     });
 
@@ -48,7 +50,7 @@ $(document).ready(function() {
         form.find("img").hide();
         button.text('Add Product');
         $('.error_input').removeClass('error_input');
-        $('.error').hide();
+        $('.message').hide();
     }
 
     function isFormValid() {
@@ -133,10 +135,10 @@ $(document).ready(function() {
                     };
                     $('.products_table tbody').append(response.message);
                     resetForm();
+                    $('.message').html("<p>Product added!</p>").show();
                 } else if (response.status == 'Error') {
                     stopLoader();
-                    $('.error').html(response.message);
-                    console.log(response.message);
+                    $('.message').html(response.message);
                 } else if (response.status == 'SessionError') {
                     location.reload();
                 }
@@ -170,8 +172,7 @@ $(document).ready(function() {
                     $('.products_table tbody').append(emptyDataRow);
                 };
             } else if (response.status == 'Error') {
-                $('.error').html(response.message);
-                console.log(response.message);
+                $('.message').html(response.message);
             } else if (response.status == 'SessionError') {
                 location.reload();
             }
@@ -211,6 +212,7 @@ $(document).ready(function() {
     function processEdit() {
         var url = "/cgi-bin/jadrn048/edit.cgi";
         var form_data = new FormData($('form[name=new_product]')[0]);
+        startLoader();
 
         $.ajax( {
             url: url,
@@ -221,14 +223,15 @@ $(document).ready(function() {
             dataType: 'json',
             success: function(response) {
                 if (response.status == 'OK') {
+                    stopLoader();
                     var sku = $('[name="sku"]').val();
-                    var newRow = response.result;
+                    var newRow = response.message;
                     var currentRow = $("#productRecord[data-sku='" + sku + "']");
                     currentRow.replaceWith(newRow);
                     resetForm();
+                    $('.message').html("<p>Product updated!</p>").show();
                 } else if (response.status == 'Error') {
-                    $('.error').html(response.message);
-                    console.log(response.message);
+                    $('.message').html(response.message);
                 } else if (response.status == 'SessionError') {
                     location.reload();
                 }

@@ -76,7 +76,10 @@ input[type="text"].focus {
 }
 
 select {
-  min-width: 200px;
+  min-width: 220px;
+  padding: 5px;
+  border-radius: 0px;
+  border: 1px solid #ccc;
 }
 
 textarea {
@@ -99,6 +102,10 @@ textarea.focus {
 
 .error {
     color: red;
+}
+
+.dataTables_filter {
+  padding-bottom: 30px;
 }
 
 /*

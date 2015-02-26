@@ -27,8 +27,7 @@
     <div class="new_product_container">
     <form method="post" enctype="multipart/form-data" name="new_product" action="">
         <h2>Product information:</h2>
-        <h5>All fields are required</h5>
-        <div class="error"></div>
+        <div class="message"></div>
         <table class="new_product_info">
             <tr>
                 <td>
@@ -95,17 +94,21 @@
                         <label class="field" for="image">Image:</label>
                         <input type="file" name="image" id="image" />
                     </div>
+
+                    <div style="text-align: right;">
+                        <button class="reset_form">Clear</button>
+                        <button class="add_new_product" id="submit_button">Add Product</button>
+                    </div>
                 </td>
             </tr>
         </table>
     </form>
-        <button class="reset">Clear</button>
-        <button class="add_new_product" id="submit_button">Add Product</button>
+
         <div class="loader" style="display: none;">Loading...</div>
     </div>
 
     <div class="products_container">
-        <table class="products_table" >
+        <table class="products_table display" >
             <thead>
             <tr>
                 <th>SKU</th>
