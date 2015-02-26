@@ -113,7 +113,7 @@ $(document).ready(function() {
     }
 
     function processInsert() {
-        var url = "/cgi-bin/insert.cgi";
+        var url = "/cgi-bin/jadrn048/insert.cgi";
         var form_data = new FormData($('form[name=new_product]')[0]);
         startLoader();
 
@@ -132,6 +132,7 @@ $(document).ready(function() {
                         emptyDataRow.remove();
                     };
                     $('.products_table tbody').append(response.message);
+                    resetForm();
                 } else if (response.status == 'Error') {
                     stopLoader();
                     $('.error').html(response.message);
@@ -153,7 +154,7 @@ $(document).ready(function() {
     }
 
     function processDelete(sku) {
-        var url = "/cgi-bin/delete.cgi";
+        var url = "/cgi-bin/jadrn048/delete.cgi";
         var param = {sku: sku};
 
         $.post(url, param, function(response){
@@ -181,12 +182,12 @@ $(document).ready(function() {
 
     function fetchProductInfo(sku) {
         var container = $("#productRecord[data-sku='" + sku + "']");
-        var url = "/cgi-bin/fetch_product.cgi";
+        var url = "/cgi-bin/jadrn048/fetch_product.cgi";
         var param = {sku: sku};
 
         $.post(url, param, function(data){
             var product = data.result[0];
-            var image_url = "/_p_images/" + product.image;
+            var image_url = "/~jadrn048/proj1/_p_images/" + product.image;
             var button = $('.add_new_product');
 
             $("input[name='sku']").val(product.sku).attr('readonly', true);
@@ -208,7 +209,7 @@ $(document).ready(function() {
     }
 
     function processEdit() {
-        var url = "/cgi-bin/edit.cgi";
+        var url = "/cgi-bin/jadrn048/edit.cgi";
         var form_data = new FormData($('form[name=new_product]')[0]);
 
         $.ajax( {
@@ -224,6 +225,7 @@ $(document).ready(function() {
                     var newRow = response.result;
                     var currentRow = $("#productRecord[data-sku='" + sku + "']");
                     currentRow.replaceWith(newRow);
+                    resetForm();
                 } else if (response.status == 'Error') {
                     $('.error').html(response.message);
                     console.log(response.message);

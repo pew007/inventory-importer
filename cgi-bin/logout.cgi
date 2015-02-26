@@ -20,7 +20,7 @@ print <<END
 
 <html>
 <head>
-    <meta http-equiv="refresh" content="0; url=http://localhost:8081/cgi-bin/main.cgi">
+    <meta http-equiv="refresh" content="0; url=http://jadran.sdsu.edu/cgi-bin/jadrn048/main.cgi">
 </head>
 </html>
 

@@ -9,14 +9,11 @@ use HTML::Template;
 use strict;
 use warnings;
 
-# my $host = "opatija.sdsu.edu";
-# my $username = "jadrn048";
-# my $password = "outlet";
-my $host = '127.0.0.1';
+my $host = "opatija.sdsu.edu";
+my $username = "jadrn048";
+my $password = "outlet";
 my $port = "3306";
 my $database = "jadrn048";
-my $username = 'root';
-my $password = "";
 my $database_source = "dbi:mysql:$database:$host:$port";
 
 my $cgi = new CGI;
@@ -45,7 +42,7 @@ Content-type:  text/html
 <html>
 <head>
     <meta http-equiv="refresh"
-        content="0; url=http://localhost:8081/index.html" />
+        content="0; url=http://jadran.sdsu.edu/~jadrn048/proj1" />
 </head><body></body>
 </html>
 
@@ -59,7 +56,7 @@ sub render_main {
     my $products    = get_products() || [];
 
     # instantiate the template and substitute the values
-    my $template = HTML::Template->new(filename => '/vagrant/templates/main.tmpl');
+    my $template = HTML::Template->new(filename => '/home/jadrn048/public_html/proj1/templates/main.tmpl');
     $template->param(
         VENDORS     => $vendors,
         CATEGORIES  => $categories,

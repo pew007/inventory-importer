@@ -21,7 +21,7 @@ sub authenticate_user {
     my $username = $cgi->param("username");
     my $password = $cgi->param("password");
 
-    open DATA, "</vagrant/cgi-bin/passwords.dat" or die "Cannot open file";
+    open DATA, "</home/jadrn048/cgi-bin/passwords.dat" or die "Cannot open file";
     my @file_lines = <DATA>;
     close DATA;
 
@@ -49,7 +49,7 @@ Content-type:  text/html
 <html>
 <head>
     <meta http-equiv="refresh"
-        content="0; url=http://localhost:8081/index.html" />
+        content="0; url=http://jadran.sdsu.edu/~jadrn048/proj1" />
 </head><body></body>
 </html>
 
@@ -68,7 +68,7 @@ Content-type:  text/html
 <html>
 <head>
     <meta http-equiv="refresh"
-        content="0; url=http://localhost:8081/cgi-bin/main.cgi" />
+        content="0; url=http://jadran.sdsu.edu/cgi-bin/jadrn048/main.cgi" />
 </head><body></body>
 </html>
 

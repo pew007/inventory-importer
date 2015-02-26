@@ -10,18 +10,15 @@ use DBI;
 ####################################################################
 ### constants
 $CGI::POST_MAX = 1024 * 3000; # Limit file size to 3MB
-my $upload_dir = '/home/vagrant/public_html/proj1/_p_images';
+my $upload_dir = '/home/jadrn048/public_html/proj1/_p_images';
 my $safe_filename_chars = "a-zA-Z0-9_.-";
 ####################################################################
 
-# my $host = "opatija.sdsu.edu";
-# my $username = "jadrn048";
-# my $password = "outlet";
-my $host     = '127.0.0.1';
+my $host = "opatija.sdsu.edu";
+my $username = "jadrn048";
+my $password = "outlet";
 my $port     = "3306";
 my $database = "jadrn048";
-my $username = 'root';
-my $password = "";
 my $database_source = "dbi:mysql:$database:$host:$port";
 
 my $cgi             = new CGI;
