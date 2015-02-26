@@ -5,7 +5,6 @@ use CGI::Session;
 use CGI::Carp qw (fatalsToBrowser);
 use Crypt::SaltedHash;
 use DBI;
-use Session::Token;
 use HTML::Template;
 use strict;
 use warnings;

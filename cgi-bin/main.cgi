@@ -9,7 +9,6 @@ use HTML::Template;
 use strict;
 use warnings;
 
-my $cgi = new CGI;
 # my $host = "opatija.sdsu.edu";
 # my $username = "jadrn048";
 # my $password = "outlet";

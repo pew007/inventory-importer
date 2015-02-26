@@ -6,7 +6,6 @@ use CGI::Carp qw (fatalsToBrowser);
 use File::Basename;
 use JSON;
 use DBI;
-use Switch;
 
 ####################################################################
 ### constants
@@ -179,11 +178,22 @@ sub get_json_response {
 
 sub find_by_id {
     my ($id, $table) = @_;
+    my $itemId = '';
+    my $itemName = '';
 
-    switch ($table) {
-        case 'vendor'   {$itemId = 'vendorID'; $itemName = 'vendorName';}
-        case 'category' {$itemId = 'categoryID'; $itemName = 'categoryName';}
-        case 'platform' {$itemId = 'platformID'; $itemName = 'platformName';}
+    if ($table eq 'vendor') {
+        $itemId = 'vendorID';
+        $itemName = 'vendorName';
+    }
+
+    if ($table eq 'category') {
+        $itemId = 'categoryID';
+        $itemName = 'categoryName';
+    }
+
+    if ($table eq 'platform') {
+        $itemId = 'platformID';
+        $itemName = 'platformName';
     }
 
     my $dbh = DBI->connect($database_source, $username, $password)
