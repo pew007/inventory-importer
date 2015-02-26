@@ -48,6 +48,7 @@ $(document).ready(function() {
         form.find("img").hide();
         button.text('Add Product');
         $('.error_input').removeClass('error_input');
+        $('.error').hide();
     }
 
     function isFormValid() {
@@ -114,6 +115,7 @@ $(document).ready(function() {
     function processInsert() {
         var url = "/cgi-bin/insert.cgi";
         var form_data = new FormData($('form[name=new_product]')[0]);
+        startLoader();
 
         $.ajax( {
             url: url,
@@ -124,12 +126,14 @@ $(document).ready(function() {
             dataType: 'json',
             success: function(response) {
                 if (response.status == 'OK') {
+                    stopLoader();
                     var emptyDataRow = $('.dataTables_empty');
                     if (emptyDataRow) {
                         emptyDataRow.remove();
                     };
-                    $('.products_table tbody').append(response.status);
+                    $('.products_table tbody').append(response.message);
                 } else if (response.status == 'Error') {
+                    stopLoader();
                     $('.error').html(response.message);
                     console.log(response.message);
                 } else if (response.status == 'SessionError') {
@@ -138,6 +142,14 @@ $(document).ready(function() {
             },
             error: function(response) {}
         });
+    }
+
+    function startLoader() {
+        $('.loader').show();
+    }
+
+    function stopLoader() {
+        $('.loader').hide();
     }
 
     function processDelete(sku) {

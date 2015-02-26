@@ -3,6 +3,17 @@ html,body {
     font-family: 'Arial', sans-serif;
 }
 
+.navbar {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+}
+
+li {
+    float: right;
+}
+
 .new_product_container {
     height: 100%;
     background: #DFD;
@@ -52,8 +63,33 @@ button {
 }
 
 input {
-    min-width: 200px;
-    padding: 2px;
+  min-width: 200px;
+  padding: 10px;
+  border: solid 1px #dcdcdc;
+  transition: box-shadow 0.3s, border 0.3s;
+}
+
+input[type="text"]:focus,
+input[type="text"].focus {
+  border: solid 1px #707070;
+  box-shadow: 0 0 5px 1px #969696;
+}
+
+select {
+  min-width: 200px;
+}
+
+textarea {
+  min-width: 200px;
+  padding: 10px;
+  border: solid 1px #dcdcdc;
+  transition: box-shadow 0.3s, border 0.3s;
+}
+
+textarea:focus,
+textarea.focus {
+  border: solid 1px #707070;
+  box-shadow: 0 0 5px 1px #969696;
 }
 
 #product-image {
@@ -63,4 +99,47 @@ input {
 
 .error {
     color: red;
+}
+
+/*
+ * Loader CSS
+ * Source: http://projects.lukehaas.me/css-loaders/
+ */
+.loader {
+  margin: 6em auto;
+  font-size: 10px;
+  position: relative;
+  text-indent: -9999em;
+  border-top: 1.1em solid rgba(52, 39, 255, 0.2);
+  border-right: 1.1em solid rgba(255, 255, 255, 0.2);
+  border-bottom: 1.1em solid rgba(255, 255, 255, 0.2);
+  border-left: 1.1em solid #ffffff;
+  -webkit-animation: load8 1.1s infinite linear;
+  animation: load8 1.1s infinite linear;
+}
+.loader,
+.loader:after {
+  border-radius: 50%;
+  width: 10em;
+  height: 10em;
+}
+@-webkit-keyframes load8 {
+  0% {
+    -webkit-transform: rotate(0deg);
+    transform: rotate(0deg);
+  }
+  100% {
+    -webkit-transform: rotate(360deg);
+    transform: rotate(360deg);
+  }
+}
+@keyframes load8 {
+  0% {
+    -webkit-transform: rotate(0deg);
+    transform: rotate(0deg);
+  }
+  100% {
+    -webkit-transform: rotate(360deg);
+    transform: rotate(360deg);
+  }
 }
